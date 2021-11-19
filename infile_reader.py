@@ -23,7 +23,7 @@ class InFileReader(config_parser.ConfigFileParser):
         rho = self.get(f"{prefix}Ro{mat_name}", cast_type=float)
         if rho < 0:
             raise RuntimeError(f"Material {mat_name} rho cannot be negative: {rho}")
-        fraction_type = self.get(f"{prefix}FractionType{mat_name}")
+        fraction_type = self.get(f"{prefix}FractionType{mat_name}", default="MASS")
         elements = []
         for i in range(elements_count):
             z = self.get(f"{prefix}Z{mat_name}[{i}]", cast_type=int)
