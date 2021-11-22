@@ -37,7 +37,7 @@ class InFileReader(config_parser.ConfigFileParser):
         elif 'SourceType' in self.data:
             return self.get('SourceType')
         else:
-            raise RuntimeError('Unknown file type')
+            raise RuntimeError(f'Unknown file type for file: {self.filename}')
 
 
 def get_object_type(file_type):

@@ -4,6 +4,7 @@
 class ConfigFileParser:
     def __init__(self, filename, sep='='):
         self.data = {}
+        self.filename = filename
         with open(filename) as f:
             for line in f:
                 line = line.strip()
