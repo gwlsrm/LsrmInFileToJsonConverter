@@ -31,20 +31,25 @@ class InFileReader(config_parser.ConfigFileParser):
             elements.append({'z': z, 'frac': frac})
         return {'rho': rho, 'fraction_type': fraction_type, 'elements': elements}
 
+
     def get_file_type(self):
         if 'DetectorType' in self.data:
             return self.get('DetectorType')
         elif 'SourceType' in self.data:
             return self.get('SourceType')
+        elif 'AN_Name' or 'AN_kev_per_ch' in self.data:
+            return 'ANALYZER'
         else:
             raise RuntimeError(f'Unknown file type for file: {self.filename}')
-
+    
 
 def get_object_type(file_type):
     if file_type in ['COAXIAL', 'SCINTILLATOR', 'COAX_WELL']:
         return 'Detector'
     elif file_type in ['POINT', 'CYLINDER', 'MARINELLI', 'CONE']:
         return 'Source'
+    elif file_type == 'ANALYZER':
+        return 'Analyzer'
 
 
 def parse_geometry(parser, file_type):
@@ -55,3 +60,15 @@ def parse_geometry(parser, file_type):
 def parse_material(parser, file_type):
     prefix = FILE_TYPE_TO_PREFIX[file_type]
     return {mat_name: parser.get_material(mat_name, prefix) for mat_name in FILE_TYPE_TO_MAT_NAME[file_type]}
+
+
+def parse_anal_params(parser):
+    prefix = 'AN_';
+    return {
+        'Name': parser.get(prefix+'Name'),
+        'FWHM_122': parser.get(prefix+'FWHM_122', cast_type=float),
+        'FWHM_662': parser.get(prefix+'FWHM_662', cast_type=float),
+        'FWHM_1332': parser.get(prefix+'FWHM_1332', cast_type=float),
+        'kev_per_ch': parser.get(prefix+'kev_per_ch', cast_type=float),
+        'N_ch': parser.get(prefix+'N_ch', cast_type=int),
+    }

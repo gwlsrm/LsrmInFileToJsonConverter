@@ -144,6 +144,15 @@ CONE_MAT_NAMES = [
     'EmptySpace',
 ]
 
+ANAL_PARAMS = [
+    'Name',
+    'FWHM_122',
+    'FWHM_662',
+    'FWHM_1332',
+    'kev_per_ch',
+    'N_ch',
+]
+
 FILE_TYPE_TO_PREFIX = {
     'COAXIAL': 'DC_',
     'SCINTILLATOR': 'DS_',

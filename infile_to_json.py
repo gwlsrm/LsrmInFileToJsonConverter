@@ -1,7 +1,7 @@
 import sys
 import os.path
 import json
-from infile_reader import InFileReader, parse_geometry, get_object_type, parse_material
+from infile_reader import InFileReader, parse_geometry, get_object_type, parse_material, parse_anal_params
 
 
 def _getoutput_file_name(input_filename):
@@ -10,15 +10,21 @@ def _getoutput_file_name(input_filename):
 
 
 def convert_in_to_json(parser, file_type):
-    res = {
-        get_object_type(file_type): {
-            'Type': file_type,
-            'Geometry':
-                parse_geometry(parser, file_type),
-            'Material':
-                parse_material(parser, file_type),
+    object_type = get_object_type(file_type)
+    if object_type in ('Detector', 'Source'):
+        res = {
+            object_type: {
+                'Type': file_type,
+                'Geometry':
+                    parse_geometry(parser, file_type),
+                'Material':
+                    parse_material(parser, file_type),
+            }
         }
-    }
+    elif object_type == 'Analyzer':
+        res = {
+            object_type: parse_anal_params(parser),
+        }
     return res
 
 
